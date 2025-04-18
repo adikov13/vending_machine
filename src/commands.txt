@@ -1,0 +1,17 @@
+git status
+git add MoneyAcceptor.java
+git commit -m "add class MoneyAcceptor"
+git status
+git add src/AppRunner.java
+git commit -m "fix output with all options^ including point a - add coins"
+git status
+git rm src/model/MoneyAcceptor.java
+git status
+git add *
+git status
+git add *
+git commit -m  "implemeted card payment method"
+git add .gitignore .idea *iml
+git add  *.iml
+git status
+

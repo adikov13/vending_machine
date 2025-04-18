@@ -14,4 +14,7 @@ git commit -m  "implemeted card payment method"
 git add .gitignore .idea *iml
 git add  *.iml
 git status
-
+git add src/commands.txt
+git commit -m "added task requirements"
+git checkout master
+git merge home_work_25

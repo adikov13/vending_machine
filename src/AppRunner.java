@@ -2,6 +2,9 @@ import enums.ActionLetter;
 import model.*;
 import util.UniversalArray;
 import util.UniversalArrayImpl;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 import java.util.Scanner;
 
@@ -56,31 +59,54 @@ public class AppRunner {
 
     private void chooseAction(UniversalArray<Product> products) {
         showActions(products);
-        print(" h - Выйти");
         String action = fromConsole().substring(0, 1);
         try {
-            for (int i = 0; i < products.size(); i++) {
-                if (products.get(i).getActionLetter().equals(ActionLetter.valueOf(action.toUpperCase()))) {
-                    coinAcceptor.setAmount(coinAcceptor.getAmount() - products.get(i).getPrice());
-                    print("Вы купили " + products.get(i).getName());
-                    break;
-                } else if ("h".equalsIgnoreCase(action)) {
-                    isExit = true;
-                    break;
+            ActionLetter actionLetter = ActionLetter.valueOf(action.toUpperCase());
+            if (actionLetter == ActionLetter.A) {
+                print("Введите сумму для пополнения:");
+                int money = Integer.parseInt(fromConsole());
+                if (money > 0) {
+                    coinAcceptor.setAmount(coinAcceptor.getAmount() + money);
+                    print("Баланс пополнен. Текущий баланс: " + coinAcceptor.getAmount());
+                } else {
+                    print("Ошибка: сумма должна быть больше 0!");
+                }
+            }
+            else if ("h".equalsIgnoreCase(action)) {
+                isExit = true;
+            }
+            else {
+                for (int i = 0; i < products.size(); i++) {
+                    if (products.get(i).getActionLetter() == actionLetter) {
+                        if (coinAcceptor.getAmount() >= products.get(i).getPrice()) {
+                            coinAcceptor.setAmount(coinAcceptor.getAmount() - products.get(i).getPrice());
+                            print("Вы купили " + products.get(i).getName());
+                        } else {
+                            print("Недостаточно средств!");
+                        }
+                        break;
+                    }
                 }
             }
         } catch (IllegalArgumentException e) {
-            print("Недопустимая буква. Попрбуйте еще раз.");
-            chooseAction(products);
+            print("Недопустимая буква. Попробуйте еще раз.");
         }
-
-
     }
 
+
+
+
     private void showActions(UniversalArray<Product> products) {
+        List<Product> allActions = new ArrayList<>();
         for (int i = 0; i < products.size(); i++) {
-            print(String.format(" %s - %s", products.get(i).getActionLetter().getValue(), products.get(i).getName()));
+            allActions.add(products.get(i));
         }
+        allActions.add(new Product("Пополнить баланс", ActionLetter.A, 0));
+        allActions.sort(Comparator.comparing(p -> p.getActionLetter().getValue()));
+        for (Product p : allActions) {
+            print(String.format(" %s - %s", p.getActionLetter().getValue(), p.getName()));
+        }
+        print(" h - Выйти");
     }
 
     private String fromConsole() {

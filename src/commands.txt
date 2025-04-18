@@ -18,3 +18,6 @@ git add src/commands.txt
 git commit -m "added task requirements"
 git checkout master
 git merge home_work_25
+git add .
+git commit -m "Merge branch home_work_25 into master"
+git push origin master
